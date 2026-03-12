@@ -506,11 +506,11 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: "en",
+    fallbackLng: "uk",
     supportedLngs: ["en", "uk"],
     nonExplicitSupportedLngs: true,
     detection: {
-      order: ["localStorage", "navigator"],
+      order: ["localStorage"],
       lookupLocalStorage: "bioluma:lang",
       caches: ["localStorage"],
     },
