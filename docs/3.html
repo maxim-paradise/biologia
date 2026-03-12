@@ -1,0 +1,1650 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Metamorphosis: A Study</title>
+    
+    <style vid="5">
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+
+        :root {
+            --teal: #1F4C59;
+            --yellow: #F3C522;
+            --pink: #E53B82;
+            --mint: #83D5A1;
+            --red: #BA2433;
+            --white: #F8F8F8;
+            --black: #0A0A0A;
+            --paper-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            
+            --font-display: 'Anton', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --font-mono: 'Courier Prime', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--black);
+            font-family: var(--font-mono);
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        
+        .svg-filters {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        
+        #collage-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            z-index: 1;
+        }
+
+        
+        .main-title-banner {
+            position: absolute;
+            top: 50%;
+            left: -5%;
+            width: 110%;
+            background-color: var(--teal);
+            transform: translateY(-50%) rotate(-2deg);
+            z-index: 10;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--paper-shadow);
+            pointer-events: none; 
+            transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+            
+            mask-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,5 Q10,0 20,6 T40,4 T60,8 T80,3 T100,7 T120,2 L120,95 Q110,100 100,94 T80,96 T60,92 T40,97 T20,93 T0,98 Z'/%3E%3C/svg%3E");
+            mask-size: 100% 100%;
+        }
+
+        .main-title-banner.hidden {
+            opacity: 0;
+            transform: translateY(-50%) rotate(-2deg) scale(1.1);
+        }
+
+        .director-text {
+            font-family: var(--font-serif);
+            color: var(--white);
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            margin-bottom: -15px;
+            z-index: 2;
+        }
+
+        .banner-text {
+            font-family: var(--font-display);
+            color: var(--yellow);
+            font-size: clamp(4rem, 12vw, 12rem);
+            line-height: 1;
+            letter-spacing: 0.02em;
+            
+            text-shadow: 
+                3px 3px 0 var(--black),
+                -2px -2px 0 rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        
+        .stage-band {
+            flex: 1;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: flex 0.7s cubic-bezier(0.7, 0, 0.1, 1), filter 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        
+        #collage-container:not(.has-active) .stage-band:hover {
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+        
+        .painterly-bg {
+            position: absolute;
+            inset: -10px; 
+            background-size: cover;
+            background-position: center;
+            mix-blend-mode: multiply;
+            opacity: 0.6;
+            pointer-events: none;
+            
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(0,0,0,0.15), transparent),
+                radial-gradient(ellipse 90% 40% at 80% 60%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.1) 100%);
+        }
+
+        
+        .tear-top {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background: var(--white);
+            z-index: 5;
+            mask-image: url("data:image/svg+xml,%3Csvg width='1000' height='25' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,25 L0,15 Q10,5 20,12 T40,8 T60,18 T80,5 T100,15 T120,6 T140,19 T160,8 T180,14 T200,4 T220,16 T240,7 T260,18 T280,9 T300,15 T320,5 T340,17 T360,8 T380,14 T400,6 T420,19 T440,7 T460,16 T480,4 T500,15 T520,8 T540,18 T560,9 T580,14 T600,5 T620,17 T640,6 T660,19 T680,7 T700,16 T720,4 T740,15 T760,8 T780,18 T800,9 T820,14 T840,5 T860,17 T880,6 T900,19 T920,7 T940,16 T960,4 T980,15 L1000,10 L1000,25 Z'/%3E%3C/svg%3E");
+            mask-size: 100% 100%;
+            pointer-events: none;
+        }
+
+        
+        .stage-egg { background-color: var(--yellow); }
+        .stage-larva { background-color: var(--pink); }
+        .stage-pupa { background-color: var(--mint); }
+        .stage-adult { background-color: var(--red); }
+
+        
+        .default-content {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 5vw;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+        }
+
+        .stage-num {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 8rem);
+            color: var(--black);
+            opacity: 0.15;
+            line-height: 0.8;
+            mix-blend-mode: color-burn;
+        }
+
+        .stage-name-default {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-style: italic;
+            font-weight: 900;
+            color: var(--black);
+            mix-blend-mode: overlay;
+        }
+
+        
+        .expanded-content {
+            opacity: 0;
+            position: absolute;
+            inset: 0;
+            padding: 6vw;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4vw;
+            pointer-events: none;
+            transition: opacity 0.5s ease 0.3s; 
+            align-items: center;
+        }
+
+        .stage-band.active {
+            flex: 8;
+            cursor: default;
+        }
+
+        .stage-band.active .default-content {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+
+        .stage-band.active .expanded-content {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stage-band.inactive {
+            flex: 0.3;
+            filter: grayscale(0.5) brightness(0.7);
+        }
+
+        
+        .detail-header {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 8vw, 10rem);
+            line-height: 0.85;
+            text-transform: uppercase;
+            color: var(--black);
+            
+            -webkit-text-stroke: 2px var(--black);
+            color: transparent;
+            position: relative;
+        }
+        
+        .detail-header::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            color: var(--black);
+            -webkit-text-stroke: 0;
+            z-index: -1;
+            mix-blend-mode: multiply;
+            opacity: 0.7;
+        }
+
+        .detail-meta {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--black);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .detail-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 500px;
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border: 2px solid var(--black);
+            
+            transform: rotate(-1deg);
+            box-shadow: 5px 5px 0 var(--black);
+        }
+
+        
+        .illustration-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .art-piece {
+            width: 80%;
+            height: auto;
+            max-height: 60vh;
+            filter: drop-shadow(10px 10px 0 rgba(0,0,0,0.8));
+            
+            filter: url(#rough-edge) drop-shadow(15px 15px 0px rgba(0,0,0,0.5));
+        }
+
+        
+        .system-code {
+            position: absolute;
+            bottom: 2vw;
+            right: 2vw;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            transform: rotate(-90deg);
+            transform-origin: bottom right;
+        }
+
+        
+        .close-btn {
+            position: absolute;
+            top: 2vw;
+            right: 2vw;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transform: rotate(3deg);
+            transition: transform 0.2s, background 0.2s;
+            z-index: 100;
+        }
+
+        .close-btn:hover {
+            transform: rotate(0deg) scale(1.1);
+            background: var(--teal);
+            color: var(--yellow);
+        }
+
+        
+        #quiz-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--teal);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            padding: 4vw;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+            
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        #quiz-overlay.active {
+            transform: translateY(0);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--yellow);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .quiz-title {
+            font-family: var(--font-display);
+            color: var(--yellow);
+            font-size: 4rem;
+            text-shadow: 2px 2px 0 var(--black);
+        }
+
+        .quiz-close {
+            background: transparent;
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+            font-family: var(--font-mono);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+        
+        .quiz-close:hover { background: var(--yellow); color: var(--teal); }
+
+        .quiz-workspace {
+            display: flex;
+            gap: 4vw;
+            flex: 1;
+        }
+
+        .drop-zones {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .drop-zone {
+            border: 3px dashed var(--mint);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: rgba(131, 213, 161, 0.4);
+            transition: background 0.3s;
+            position: relative;
+        }
+        .drop-zone.hovered { background: rgba(131, 213, 161, 0.1); }
+        .drop-zone::before {
+            content: attr(data-order) ".";
+            position: absolute;
+            left: 20px;
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--mint);
+        }
+
+        .draggable-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .drag-item {
+            background: var(--white);
+            padding: 20px;
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--black);
+            cursor: grab;
+            box-shadow: 8px 8px 0 var(--black);
+            text-align: center;
+            transform: rotate(-2deg);
+            transition: transform 0.1s;
+        }
+        
+        .drag-item:active { cursor: grabbing; transform: scale(1.05) rotate(0deg); }
+
+        
+        .drag-item[data-id="1"] { background: var(--yellow); }
+        .drag-item[data-id="2"] { background: var(--pink); }
+        .drag-item[data-id="3"] { background: var(--mint); }
+        .drag-item[data-id="4"] { background: var(--red); color: var(--white); }
+
+        
+        .quiz-trigger {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 10px 30px;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--white);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .quiz-trigger:hover {
+            transform: translateX(-50%) translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--white);
+        }
+
+        
+        .progress-indicator {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        
+        #collage-container.has-active .progress-indicator { opacity: 0; }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--white);
+            border-radius: 50%;
+            border: 2px solid var(--black);
+            
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
+
+        
+        .svg-art {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ── CURSOR ── */
+        .custom-cursor {
+            position: fixed;
+            width: 20px; height: 20px;
+            border: 2px solid var(--yellow);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor.hover { width: 40px; height: 40px; background: rgba(243,197,34,0.15); }
+
+        /* ── PARTICLE CANVAS ── */
+        #particle-canvas {
+            position: fixed; inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── SOUND TOGGLE ── */
+        .sound-btn {
+            position: fixed;
+            top: 16px; right: 16px;
+            z-index: 500;
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid var(--white);
+            padding: 6px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+        }
+        .sound-btn:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+
+        /* ── COUNTER BADGE ── */
+        .counter-badge {
+            position: fixed;
+            top: 16px; left: 16px;
+            z-index: 500;
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            display: flex; gap: 12px;
+        }
+        .counter-badge span { color: var(--yellow); }
+
+        /* ── TOOLTIP ── */
+        .tooltip {
+            position: fixed;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 6px 12px;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border-left: 3px solid var(--yellow);
+            white-space: nowrap;
+            letter-spacing: 0.08em;
+        }
+        .tooltip.show { opacity: 1; }
+
+        /* ── FACT TICKER (bottom bar) ── */
+        .fact-ticker {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 32px;
+            background: var(--black);
+            color: var(--yellow);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 400;
+            border-top: 2px solid rgba(243,197,34,0.3);
+        }
+        .ticker-label {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0 12px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            letter-spacing: 0.08em;
+        }
+        .ticker-track {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+        .ticker-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: ticker-scroll 28s linear infinite;
+        }
+        @keyframes ticker-scroll {
+            from { transform: translateX(100vw); }
+            to   { transform: translateX(-100%); }
+        }
+        .ticker-sep { margin: 0 30px; opacity: 0.4; }
+
+        /* ── EXPANDED CONTENT upgrade ── */
+        .fun-fact-pill {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            margin: 4px 4px 0 0;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .fun-fact-pill:hover { background: var(--yellow); color: var(--black); }
+        .fun-fact-reveal {
+            margin-top: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            background: rgba(255,255,255,0.9);
+            border-left: 4px solid;
+            padding: 8px 12px;
+            min-height: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+        }
+        .fun-fact-reveal.open { max-height: 200px; }
+        .stage-egg   .fun-fact-reveal { border-color: #c9a400; }
+        .stage-larva .fun-fact-reveal { border-color: var(--pink); }
+        .stage-pupa  .fun-fact-reveal { border-color: var(--mint); }
+        .stage-adult .fun-fact-reveal { border-color: var(--red); }
+
+        /* ── PULSE RING on SVG ── */
+        @keyframes pulse-ring {
+            0%   { r: 80; opacity: 0.6; }
+            100% { r: 110; opacity: 0; }
+        }
+        .pulse-circle { animation: pulse-ring 1.8s ease-out infinite; }
+
+        /* ── PROGRESS BAR (stage tracker) ── */
+        .stage-progress {
+            position: fixed;
+            left: 0; top: 0;
+            width: 4px;
+            height: 100vh;
+            z-index: 400;
+            display: flex;
+            flex-direction: column;
+        }
+        .sp-seg {
+            flex: 1;
+            transition: opacity 0.4s;
+            opacity: 0.3;
+        }
+        .sp-seg.active { opacity: 1; }
+        .sp-seg-1 { background: var(--yellow); }
+        .sp-seg-2 { background: var(--pink); }
+        .sp-seg-3 { background: var(--mint); }
+        .sp-seg-4 { background: var(--red); }
+
+        /* ── QUIZ UPGRADE ── */
+        .quiz-result-msg {
+            text-align: center;
+            padding: 20px;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--yellow);
+            text-shadow: 2px 2px 0 var(--black);
+            display: none;
+        }
+        .drag-item.correct  { outline: 4px solid #2ecc71; }
+        .drag-item.wrong    { outline: 4px solid #e74c3c; animation: shake 0.4s; }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60% { transform: translateX(-8px); }
+            40%,80% { transform: translateX(8px); }
+        }
+        .quiz-reset-btn {
+            background: var(--pink);
+            color: var(--white);
+            border: none;
+            padding: 10px 28px;
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-top: 12px;
+            letter-spacing: 0.05em;
+            display: none;
+            box-shadow: 4px 4px 0 var(--black);
+        }
+        .quiz-reset-btn:hover { background: var(--red); }
+
+        /* ── INTRO SPLASH ── */
+        #intro-splash {
+            position: fixed; inset: 0;
+            background: var(--black);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: opacity 0.7s ease;
+        }
+        #intro-splash.fade-out { opacity: 0; pointer-events: none; }
+        .splash-title {
+            font-family: var(--font-display);
+            font-size: clamp(4rem,12vw,10rem);
+            color: var(--yellow);
+            text-shadow: 5px 5px 0 var(--pink), 10px 10px 0 var(--teal);
+            letter-spacing: -0.02em;
+            text-align: center;
+            line-height: 0.9;
+        }
+        .splash-sub {
+            font-family: var(--font-mono);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .splash-btn {
+            margin-top: 10px;
+            background: transparent;
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            padding: 12px 50px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .splash-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--yellow);
+            transform: translateX(-101%);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+        .splash-btn:hover::after { transform: translateX(0); }
+        .splash-btn:hover { color: var(--black); }
+        .splash-dots {
+            display: flex; gap: 10px; margin-top: 6px;
+        }
+        .splash-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            animation: dot-pulse 1.2s ease-in-out infinite;
+        }
+        .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+        .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+        .splash-dot:nth-child(4) { animation-delay: 0.6s; }
+        @keyframes dot-pulse {
+            0%,100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        /* ── HOVER MAGNIFY on SVG art ── */
+        .art-piece { transition: transform 0.4s cubic-bezier(0.2,1,0.3,1); cursor: zoom-in; }
+        .art-piece:hover { transform: scale(1.12) rotate(-2deg); }
+
+        /* ── DETAIL BODY animate lines ── */
+        .detail-body p {
+            animation: line-in 0.5s ease both;
+        }
+        .detail-body p:nth-child(3) { animation-delay: 0.15s; }
+        @keyframes line-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── GLITCH effect on banner hover ── */
+        .banner-text:hover {
+            animation: glitch 0.3s steps(2) 1;
+        }
+        @keyframes glitch {
+            0%   { text-shadow: 3px 3px 0 var(--black), -2px -2px 0 rgba(255,255,255,0.2); }
+            25%  { text-shadow: -4px 2px 0 var(--pink), 4px -2px 0 var(--teal); }
+            50%  { text-shadow: 4px -2px 0 var(--mint), -4px 2px 0 var(--red); }
+            75%  { text-shadow: -3px 3px 0 var(--pink), 3px -3px 0 var(--black); }
+            100% { text-shadow: 3px 3px 0 var(--black), -2px -2px 0 rgba(255,255,255,0.2); }
+        }
+
+        /* ── CURSOR ── */
+        .custom-cursor {
+            position: fixed;
+            width: 20px; height: 20px;
+            border: 2px solid var(--yellow);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor.hover { width: 40px; height: 40px; background: rgba(243,197,34,0.15); }
+
+        /* ── PARTICLE CANVAS ── */
+        #particle-canvas {
+            position: fixed; inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── SOUND TOGGLE ── */
+        .sound-btn {
+            position: fixed;
+            top: 16px; right: 16px;
+            z-index: 500;
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid var(--white);
+            padding: 6px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+        }
+        .sound-btn:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+
+        /* ── COUNTER BADGE ── */
+        .counter-badge {
+            position: fixed;
+            top: 16px; left: 16px;
+            z-index: 500;
+            background: var(--black);
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            display: flex; gap: 12px;
+        }
+        .counter-badge span { color: var(--yellow); }
+
+        /* ── TOOLTIP ── */
+        .tooltip {
+            position: fixed;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 6px 12px;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border-left: 3px solid var(--yellow);
+            white-space: nowrap;
+            letter-spacing: 0.08em;
+        }
+        .tooltip.show { opacity: 1; }
+
+        /* ── FACT TICKER (bottom bar) ── */
+        .fact-ticker {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 32px;
+            background: var(--black);
+            color: var(--yellow);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 400;
+            border-top: 2px solid rgba(243,197,34,0.3);
+        }
+        .ticker-label {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0 12px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            letter-spacing: 0.08em;
+        }
+        .ticker-track {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+        .ticker-inner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            white-space: nowrap;
+            animation: ticker-scroll 28s linear infinite;
+        }
+        @keyframes ticker-scroll {
+            from { transform: translateX(100vw); }
+            to   { transform: translateX(-100%); }
+        }
+        .ticker-sep { margin: 0 30px; opacity: 0.4; }
+
+        /* ── EXPANDED CONTENT upgrade ── */
+        .fun-fact-pill {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            margin: 4px 4px 0 0;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .fun-fact-pill:hover { background: var(--yellow); color: var(--black); }
+        .fun-fact-reveal {
+            margin-top: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            background: rgba(255,255,255,0.9);
+            border-left: 4px solid;
+            padding: 8px 12px;
+            min-height: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+        }
+        .fun-fact-reveal.open { max-height: 200px; }
+        .stage-egg   .fun-fact-reveal { border-color: #c9a400; }
+        .stage-larva .fun-fact-reveal { border-color: var(--pink); }
+        .stage-pupa  .fun-fact-reveal { border-color: var(--mint); }
+        .stage-adult .fun-fact-reveal { border-color: var(--red); }
+
+        /* ── PULSE RING on SVG ── */
+        @keyframes pulse-ring {
+            0%   { r: 80; opacity: 0.6; }
+            100% { r: 110; opacity: 0; }
+        }
+        .pulse-circle { animation: pulse-ring 1.8s ease-out infinite; }
+
+        /* ── PROGRESS BAR (stage tracker) ── */
+        .stage-progress {
+            position: fixed;
+            left: 0; top: 0;
+            width: 4px;
+            height: 100vh;
+            z-index: 400;
+            display: flex;
+            flex-direction: column;
+        }
+        .sp-seg {
+            flex: 1;
+            transition: opacity 0.4s;
+            opacity: 0.3;
+        }
+        .sp-seg.active { opacity: 1; }
+        .sp-seg-1 { background: var(--yellow); }
+        .sp-seg-2 { background: var(--pink); }
+        .sp-seg-3 { background: var(--mint); }
+        .sp-seg-4 { background: var(--red); }
+
+        /* ── QUIZ UPGRADE ── */
+        .quiz-result-msg {
+            text-align: center;
+            padding: 20px;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--yellow);
+            text-shadow: 2px 2px 0 var(--black);
+            display: none;
+        }
+        .drag-item.correct  { outline: 4px solid #2ecc71; }
+        .drag-item.wrong    { outline: 4px solid #e74c3c; animation: shake 0.4s; }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60% { transform: translateX(-8px); }
+            40%,80% { transform: translateX(8px); }
+        }
+        .quiz-reset-btn {
+            background: var(--pink);
+            color: var(--white);
+            border: none;
+            padding: 10px 28px;
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-top: 12px;
+            letter-spacing: 0.05em;
+            display: none;
+            box-shadow: 4px 4px 0 var(--black);
+        }
+        .quiz-reset-btn:hover { background: var(--red); }
+
+        /* ── INTRO SPLASH ── */
+        #intro-splash {
+            position: fixed; inset: 0;
+            background: var(--black);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: opacity 0.7s ease;
+        }
+        #intro-splash.fade-out { opacity: 0; pointer-events: none; }
+        .splash-title {
+            font-family: var(--font-display);
+            font-size: clamp(4rem,12vw,10rem);
+            color: var(--yellow);
+            text-shadow: 5px 5px 0 var(--pink), 10px 10px 0 var(--teal);
+            letter-spacing: -0.02em;
+            text-align: center;
+            line-height: 0.9;
+        }
+        .splash-sub {
+            font-family: var(--font-mono);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .splash-btn {
+            margin-top: 10px;
+            background: transparent;
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            padding: 12px 50px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .splash-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--yellow);
+            transform: translateX(-101%);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+        .splash-btn:hover::after { transform: translateX(0); }
+        .splash-btn:hover { color: var(--black); }
+        .splash-dots {
+            display: flex; gap: 10px; margin-top: 6px;
+        }
+        .splash-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            animation: dot-pulse 1.2s ease-in-out infinite;
+        }
+        .splash-dot:nth-child(2) { animation-delay: 0.2s; }
+        .splash-dot:nth-child(3) { animation-delay: 0.4s; }
+        .splash-dot:nth-child(4) { animation-delay: 0.6s; }
+        @keyframes dot-pulse {
+            0%,100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        /* ── HOVER MAGNIFY on SVG art ── */
+        .art-piece { transition: transform 0.4s cubic-bezier(0.2,1,0.3,1); cursor: zoom-in; }
+        .art-piece:hover { transform: scale(1.12) rotate(-2deg); }
+
+        /* ── DETAIL BODY animate lines ── */
+        .detail-body p {
+            animation: line-in 0.5s ease both;
+        }
+        .detail-body p:nth-child(3) { animation-delay: 0.15s; }
+        @keyframes line-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── GLITCH effect on banner hover ── */
+        .banner-text:hover {
+            animation: glitch 0.3s steps(2) 1;
+        }
+        @keyframes glitch {
+            0%   { text-shadow: 3px 3px 0 var(--black), -2px -2px 0 rgba(255,255,255,0.2); }
+            25%  { text-shadow: -4px 2px 0 var(--pink), 4px -2px 0 var(--teal); }
+            50%  { text-shadow: 4px -2px 0 var(--mint), -4px 2px 0 var(--red); }
+            75%  { text-shadow: -3px 3px 0 var(--pink), 3px -3px 0 var(--black); }
+            100% { text-shadow: 3px 3px 0 var(--black), -2px -2px 0 rgba(255,255,255,0.2); }
+        }
+
+        @media (max-width: 768px) {
+            .expanded-content { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 15vw 6vw; }
+            .banner-text { font-size: 4rem; }
+            .detail-header { font-size: 3.5rem; }
+            .quiz-workspace { flex-direction: column; }
+        }
+    </style>
+</head>
+<body vid="6">
+
+    <!-- INTRO SPLASH -->
+    <div id="intro-splash" vid="7">
+        <div class="splash-title" vid="8">META-<br vid="9">MORPHOSIS</div>
+        <div class="splash-sub" vid="10">Interactive Nature Study</div>
+        <div class="splash-dots" vid="11">
+            <div class="splash-dot" style="background:var(--yellow)" vid="12"></div>
+            <div class="splash-dot" style="background:var(--pink)" vid="13"></div>
+            <div class="splash-dot" style="background:var(--mint)" vid="14"></div>
+            <div class="splash-dot" style="background:var(--red)" vid="15"></div>
+        </div>
+        <button class="splash-btn" id="splash-enter" vid="16">BEGIN STUDY</button>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="cursor" vid="17"></div>
+
+    <!-- TOOLTIP -->
+    <div class="tooltip" id="tooltip" vid="18"></div>
+
+    <!-- PARTICLE CANVAS -->
+    <canvas id="particle-canvas" vid="19"></canvas>
+
+    <!-- STAGE PROGRESS BAR -->
+    <div class="stage-progress" vid="20">
+        <div class="sp-seg sp-seg-1" id="seg1" vid="21"></div>
+        <div class="sp-seg sp-seg-2" id="seg2" vid="22"></div>
+        <div class="sp-seg sp-seg-3" id="seg3" vid="23"></div>
+        <div class="sp-seg sp-seg-4" id="seg4" vid="24"></div>
+    </div>
+
+    <!-- COUNTER BADGE -->
+    <div class="counter-badge" vid="25">
+        STAGES EXPLORED: <span id="explore-count" vid="26">0</span>/4
+    </div>
+
+    <!-- SOUND TOGGLE -->
+    <button class="sound-btn" id="sound-btn" vid="27">♪ SFX ON</button>
+
+    <!-- FACT TICKER -->
+    <div class="fact-ticker" vid="28">
+        <div class="ticker-label" vid="29">DID YOU KNOW</div>
+        <div class="ticker-track" vid="30">
+            <div class="ticker-inner" vid="31">
+                A butterfly can travel up to 3,000 miles during migration <span class="ticker-sep" vid="32">✦</span>
+                The monarch butterfly uses Earth's magnetic field to navigate <span class="ticker-sep" vid="33">✦</span>
+                Some chrysalises can produce sounds to deter predators <span class="ticker-sep" vid="34">✦</span>
+                A caterpillar increases its body mass by 1,000× before pupating <span class="ticker-sep" vid="35">✦</span>
+                Butterflies taste with their feet via chemoreceptors <span class="ticker-sep" vid="36">✦</span>
+                The blue morpho butterfly wing colour is structural, not pigment-based <span class="ticker-sep" vid="37">✦</span>
+                Metamorphosis takes as little as 10 days in warm climates <span class="ticker-sep" vid="38">✦</span>
+            </div>
+        </div>
+    </div>
+
+    <svg class="svg-filters" vid="39">
+        <defs vid="40">
+            <filter id="rough-edge" x="-20%" y="-20%" width="140%" height="140%" vid="41">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" vid="42"></feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" vid="43"></feDisplacementMap>
+            </filter>
+        </defs>
+    </svg>
+
+    
+    <main id="collage-container" vid="44">
+
+        
+        <div class="main-title-banner" id="main-banner" vid="45">
+            <div class="director-text" vid="46">STUDY OF NATURE</div>
+            <h1 class="banner-text" title="Click stages to explore" vid="47">METAMORPHOSIS</h1>
+        </div>
+
+        <div class="progress-indicator" vid="48">
+            <div class="dot" style="background: var(--yellow)" vid="49"></div>
+            <div class="dot" style="background: var(--pink)" vid="50"></div>
+            <div class="dot" style="background: var(--mint)" vid="51"></div>
+            <div class="dot" style="background: var(--red)" vid="52"></div>
+        </div>
+
+        
+        <article class="stage-band stage-egg" data-stage="1" data-explored="false" vid="53">
+            <div class="painterly-bg" vid="54"></div>
+            <div class="default-content" vid="55">
+                <span class="stage-num" vid="56">01</span>
+                <span class="stage-name-default" vid="57">Ovum</span>
+            </div>
+            <div class="expanded-content" vid="58">
+                <div class="text-content" vid="59">
+                    <h2 class="detail-header" data-text="THE EGG" vid="60">THE EGG</h2>
+                    <div class="detail-meta" vid="61">Stage 01 — Gestation</div>
+                    <div class="detail-body" vid="62">
+                        <p vid="63">A female butterfly lays her eggs on a leaf. These eggs are tiny, varying in shape from spherical to cylindrical. The choice of leaf is critical — it must provide immediate sustenance for the hatching larva.</p>
+                        <br vid="64">
+                        <p vid="65"><strong vid="66">OBSERVATION:</strong> The ribbed texture functions as a structural defense against predators and environmental stress.</p>
+                    </div>
+                    <div style="margin-top:12px" vid="67">
+                        <div class="fun-fact-pill" data-fact="egg1" vid="68">⚡ DURATION</div>
+                        <div class="fun-fact-pill" data-fact="egg2" vid="69">🔬 MICRO-DETAIL</div>
+                        <div class="fun-fact-pill" data-fact="egg3" vid="70">🌿 HOST PLANT</div>
+                    </div>
+                    <div class="fun-fact-reveal" id="fact-egg1" vid="71">Eggs hatch in just 3–7 days depending on temperature and species.</div>
+                    <div class="fun-fact-reveal" id="fact-egg2" vid="72">Egg surfaces are covered in microscopic ridges called chorion, allowing gas exchange for the developing embryo.</div>
+                    <div class="fun-fact-reveal" id="fact-egg3" vid="73">Females chemically analyse leaves with their feet before laying, ensuring correct nutrition for larvae.</div>
+                </div>
+                <div class="illustration-container" vid="74">
+                    <svg class="art-piece" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" vid="75">
+                        <circle class="pulse-circle" cx="100" cy="100" r="80" fill="none" stroke="rgba(243,197,34,0.3)" stroke-width="2" vid="76"></circle>
+                        <circle cx="100" cy="100" r="80" fill="#fff" stroke="#111" stroke-width="8" stroke-dasharray="10 5" vid="77"></circle>
+                        <circle cx="100" cy="100" r="60" fill="none" stroke="#111" stroke-width="2" vid="78"></circle>
+                        <path d="M 50 100 Q 100 50 150 100" stroke="#111" stroke-width="4" fill="none" vid="79"></path>
+                        <path d="M 50 100 Q 100 150 150 100" stroke="#111" stroke-width="4" fill="none" vid="80"></path>
+                        <circle cx="100" cy="100" r="12" fill="#F3C522" stroke="#111" stroke-width="3" vid="81"></circle>
+                    </svg>
+                </div>
+                <button class="close-btn" vid="82">Collapse</button>
+                <div class="system-code" vid="83">REF: OVM-001.X</div>
+            </div>
+        </article>
+
+        
+        <article class="stage-band stage-larva" data-stage="2" data-explored="false" vid="84">
+            <div class="tear-top" vid="85"></div>
+            <div class="painterly-bg" vid="86"></div>
+            <div class="default-content" vid="87">
+                <span class="stage-num" vid="88">02</span>
+                <span class="stage-name-default" vid="89">Larva</span>
+            </div>
+            <div class="expanded-content" vid="90">
+                <div class="text-content" vid="91">
+                    <h2 class="detail-header" data-text="CATERPILLAR" vid="92">CATERPILLAR</h2>
+                    <div class="detail-meta" vid="93">Stage 02 — Consumption</div>
+                    <div class="detail-body" vid="94">
+                        <p vid="95">The primary function of the larva is to eat. Upon hatching, it consumes its own eggshell before attacking the host plant. It grows exponentially, shedding its exoskeleton in a process called molting.</p>
+                        <br vid="96">
+                        <p vid="97"><strong vid="98">OBSERVATION:</strong> Vibrant banding is aposematic coloration — a visual warning to predators indicating toxicity.</p>
+                    </div>
+                    <div style="margin-top:12px" vid="99">
+                        <div class="fun-fact-pill" data-fact="larva1" vid="100">⚡ GROWTH RATE</div>
+                        <div class="fun-fact-pill" data-fact="larva2" vid="101">🦟 PREDATORS</div>
+                        <div class="fun-fact-pill" data-fact="larva3" vid="102">🧬 MOLTING</div>
+                    </div>
+                    <div class="fun-fact-reveal" id="fact-larva1" vid="103">A caterpillar increases its body mass by up to 100× in just a few weeks.</div>
+                    <div class="fun-fact-reveal" id="fact-larva2" vid="104">Over 90% of butterfly eggs and larvae are eaten before reaching the pupal stage.</div>
+                    <div class="fun-fact-reveal" id="fact-larva3" vid="105">Molting occurs 4–5 times. Each phase is called an "instar" — the larva is briefly vulnerable with a soft new skin.</div>
+                </div>
+                <div class="illustration-container" vid="106">
+                    <svg class="art-piece" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" vid="107">
+                        <path d="M 20 100 Q 50 20 100 100 T 180 100 T 260 100" fill="none" stroke="#111" stroke-width="25" stroke-linecap="round" vid="108"></path>
+                        <circle cx="40" cy="70" r="8" fill="#fff" vid="109"></circle>
+                        <circle cx="120" cy="80" r="8" fill="#fff" vid="110"></circle>
+                        <circle cx="200" cy="70" r="8" fill="#fff" vid="111"></circle>
+                        <circle cx="275" cy="90" r="14" fill="#E53B82" stroke="#111" stroke-width="4" vid="112"></circle>
+                        <circle cx="282" cy="84" r="4" fill="#111" vid="113"></circle>
+                    </svg>
+                </div>
+                <button class="close-btn" vid="114">Collapse</button>
+                <div class="system-code" vid="115">REF: LRV-002.Y</div>
+            </div>
+        </article>
+
+        
+        <article class="stage-band stage-pupa" data-stage="3" data-explored="false" vid="116">
+            <div class="tear-top" vid="117"></div>
+            <div class="painterly-bg" vid="118"></div>
+            <div class="default-content" vid="119">
+                <span class="stage-num" vid="120">03</span>
+                <span class="stage-name-default" vid="121">Pupa</span>
+            </div>
+            <div class="expanded-content" vid="122">
+                <div class="text-content" vid="123">
+                    <h2 class="detail-header" data-text="CHRYSALIS" vid="124">CHRYSALIS</h2>
+                    <div class="detail-meta" vid="125">Stage 03 — Transformation</div>
+                    <div class="detail-body" vid="126">
+                        <p vid="127">Within the hardened chrysalis, radical biological breakdown occurs. The caterpillar digests itself into a nutrient soup. "Imaginal discs" — dormant stem cells — then build the adult butterfly's entire anatomy.</p>
+                        <br vid="128">
+                        <p vid="129"><strong vid="130">OBSERVATION:</strong> What appears still is violently active. This is not sleep — it is total cellular obliteration and reconstruction.</p>
+                    </div>
+                    <div style="margin-top:12px" vid="131">
+                        <div class="fun-fact-pill" data-fact="pupa1" vid="132">⚡ DURATION</div>
+                        <div class="fun-fact-pill" data-fact="pupa2" vid="133">🔬 INSIDE</div>
+                        <div class="fun-fact-pill" data-fact="pupa3" vid="134">🛡 DEFENCE</div>
+                    </div>
+                    <div class="fun-fact-reveal" id="fact-pupa1" vid="135">The pupal stage lasts 10–14 days in summer, but some species overwinter in chrysalis for months.</div>
+                    <div class="fun-fact-reveal" id="fact-pupa2" vid="136">The body of a caterpillar literally dissolves into a liquid — only 50 or so imaginal disc cells survive to build the adult.</div>
+                    <div class="fun-fact-reveal" id="fact-pupa3" vid="137">Some chrysalises vibrate and emit clicking sounds to repel predators. Others mimic leaves, bark, or bird droppings.</div>
+                </div>
+                <div class="illustration-container" vid="138">
+                    <svg class="art-piece" viewBox="0 0 150 250" xmlns="http://www.w3.org/2000/svg" vid="139">
+                        <path d="M 75 10 L 90 50 Q 120 100 90 200 L 75 240 L 60 200 Q 30 100 60 50 Z" fill="#fff" stroke="#111" stroke-width="8" vid="140"></path>
+                        <line x1="75" y1="10" x2="75" y2="240" stroke="#111" stroke-width="4" stroke-dasharray="5 5" vid="141"></line>
+                        <path d="M 60 100 L 90 120" stroke="#111" stroke-width="4" vid="142"></path>
+                        <path d="M 60 150 L 90 130" stroke="#111" stroke-width="4" vid="143"></path>
+                        <circle cx="75" cy="130" r="18" fill="#83D5A1" stroke="#111" stroke-width="3" opacity="0.7" vid="144"></circle>
+                    </svg>
+                </div>
+                <button class="close-btn" vid="145">Collapse</button>
+                <div class="system-code" vid="146">REF: PPA-003.Z</div>
+            </div>
+        </article>
+
+        
+        <article class="stage-band stage-adult" data-stage="4" data-explored="false" vid="147">
+            <div class="tear-top" vid="148"></div>
+            <div class="painterly-bg" vid="149"></div>
+            <div class="default-content" vid="150">
+                <span class="stage-num" vid="151">04</span>
+                <span class="stage-name-default" vid="152">Imago</span>
+            </div>
+            <div class="expanded-content" vid="153">
+                <div class="text-content" vid="154">
+                    <h2 class="detail-header" data-text="BUTTERFLY" style="color:var(--white); -webkit-text-stroke: 2px var(--white);" vid="155">BUTTERFLY</h2>
+                    <div class="detail-meta" style="color:var(--white); border-color:var(--white);" vid="156">Stage 04 — Reproduction</div>
+                    <div class="detail-body" vid="157">
+                        <p vid="158">The adult emerges with crumpled wings pumped full of hemolymph to expand and harden. Its sole biological purpose is reproduction — continuing the eternal cycle.</p>
+                        <br vid="159">
+                        <p vid="160"><strong vid="161">OBSERVATION:</strong> Wing patterns are formed by thousands of microscopic overlapping scales that absorb and reflect light through structural interference.</p>
+                    </div>
+                    <div style="margin-top:12px" vid="162">
+                        <div class="fun-fact-pill" data-fact="adult1" vid="163">⚡ LIFESPAN</div>
+                        <div class="fun-fact-pill" data-fact="adult2" vid="164">🌍 MIGRATION</div>
+                        <div class="fun-fact-pill" data-fact="adult3" vid="165">👁 VISION</div>
+                    </div>
+                    <div class="fun-fact-reveal" id="fact-adult1" vid="166">Most adult butterflies live only 2–4 weeks. The exception: monarchs live up to 8 months to complete their migration.</div>
+                    <div class="fun-fact-reveal" id="fact-adult2" vid="167">Monarch butterflies migrate up to 4,500 km — navigating using a time-compensated sun compass.</div>
+                    <div class="fun-fact-reveal" id="fact-adult3" vid="168">Butterflies can see ultraviolet light invisible to humans, revealing hidden patterns on wings used for mate selection.</div>
+                </div>
+                <div class="illustration-container" vid="169">
+                    <svg class="art-piece" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" vid="170">
+                        <path d="M 150 100 C 150 100, 250 10, 280 80 C 300 130, 200 180, 150 100" fill="#fff" stroke="#111" stroke-width="8" vid="171"></path>
+                        <path d="M 150 100 C 150 100, 50 10, 20 80 C 0 130, 100 180, 150 100" fill="#fff" stroke="#111" stroke-width="8" vid="172"></path>
+                        <circle cx="210" cy="80" r="20" fill="#BA2433" stroke="#111" stroke-width="3" opacity="0.7" vid="173"></circle>
+                        <circle cx="90" cy="80" r="20" fill="#BA2433" stroke="#111" stroke-width="3" opacity="0.7" vid="174"></circle>
+                        <rect x="145" y="40" width="10" height="120" rx="5" fill="#111" vid="175"></rect>
+                        <circle cx="200" cy="90" r="15" fill="#111" vid="176"></circle>
+                        <circle cx="100" cy="90" r="15" fill="#111" vid="177"></circle>
+                        <line x1="150" y1="40" x2="135" y2="10" stroke="#111" stroke-width="3" stroke-linecap="round" vid="178"></line>
+                        <line x1="150" y1="40" x2="165" y2="10" stroke="#111" stroke-width="3" stroke-linecap="round" vid="179"></line>
+                    </svg>
+                </div>
+                <button class="close-btn" style="color:var(--black); background:var(--white);" vid="180">Collapse</button>
+                <div class="system-code" style="color:var(--white);" vid="181">REF: IMG-004.W</div>
+            </div>
+        </article>
+
+        <button class="quiz-trigger" id="open-quiz" vid="182">TEST KNOWLEDGE</button>
+    </main>
+
+    
+    <section id="quiz-overlay" vid="183">
+        <div class="quiz-header" vid="184">
+            <h2 class="quiz-title" vid="185">ARRANGE THE SEQUENCE</h2>
+            <button class="quiz-close" id="close-quiz" vid="186">Close Assembly</button>
+        </div>
+        <div class="quiz-workspace" vid="187">
+            <div class="drop-zones" vid="188">
+                <div class="drop-zone" data-order="1" id="zone-1" vid="189">Drop Stage 1</div>
+                <div class="drop-zone" data-order="2" id="zone-2" vid="190">Drop Stage 2</div>
+                <div class="drop-zone" data-order="3" id="zone-3" vid="191">Drop Stage 3</div>
+                <div class="drop-zone" data-order="4" id="zone-4" vid="192">Drop Stage 4</div>
+            </div>
+            <div class="draggable-items" id="draggable-items" vid="193">
+                <div class="drag-item" draggable="true" data-id="3" vid="194">CHRYSALIS</div>
+                <div class="drag-item" draggable="true" data-id="1" vid="195">THE EGG</div>
+                <div class="drag-item" draggable="true" data-id="4" vid="196">BUTTERFLY</div>
+                <div class="drag-item" draggable="true" data-id="2" vid="197">CATERPILLAR</div>
+            </div>
+        </div>
+        <div class="quiz-result-msg" id="quiz-result" vid="198"></div>
+        <div style="text-align:center" vid="199">
+            <button class="quiz-reset-btn" id="quiz-reset" vid="200">↺ TRY AGAIN</button>
+        </div>
+    </section>
+
+    <script vid="201">
+    // ─── INTRO SPLASH ───
+    document.getElementById('splash-enter').addEventListener('click', () => {
+        const splash = document.getElementById('intro-splash');
+        splash.classList.add('fade-out');
+        setTimeout(() => splash.style.display = 'none', 700);
+        initParticles();
+    });
+
+    // ─── CUSTOM CURSOR ───
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('article, button, .fun-fact-pill, .art-piece').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ─── TOOLTIP ───
+    const tooltip = document.getElementById('tooltip');
+    const tooltipMap = {
+        'stage-egg':   'Click to explore Stage 01: The Egg',
+        'stage-larva': 'Click to explore Stage 02: The Caterpillar',
+        'stage-pupa':  'Click to explore Stage 03: The Chrysalis',
+        'stage-adult': 'Click to explore Stage 04: The Butterfly',
+    };
+    document.querySelectorAll('.stage-band').forEach(band => {
+        band.addEventListener('mousemove', e => {
+            if (band.classList.contains('active')) { tooltip.classList.remove('show'); return; }
+            const key = Array.from(band.classList).find(c => tooltipMap[c]);
+            if (key) {
+                tooltip.textContent = tooltipMap[key];
+                tooltip.style.left = (e.clientX + 16) + 'px';
+                tooltip.style.top  = (e.clientY - 10) + 'px';
+                tooltip.classList.add('show');
+            }
+        });
+        band.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+    });
+
+    // ─── SOUND (Web Audio API) ───
+    let soundOn = true;
+    let audioCtx = null;
+    document.getElementById('sound-btn').addEventListener('click', function() {
+        soundOn = !soundOn;
+        this.textContent = soundOn ? '♪ SFX ON' : '♪ SFX OFF';
+    });
+    function getCtx() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+    }
+    function playTone(freq, type='sine', dur=0.12, gain=0.15) {
+        if (!soundOn) return;
+        try {
+            const ctx = getCtx();
+            const osc = ctx.createOscillator();
+            const gn  = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            gn.gain.setValueAtTime(gain, ctx.currentTime);
+            gn.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+            osc.connect(gn); gn.connect(ctx.destination);
+            osc.start(); osc.stop(ctx.currentTime + dur);
+        } catch(e){}
+    }
+    function playExpand() { playTone(440,'triangle',0.2,0.18); setTimeout(()=>playTone(660,'triangle',0.15,0.12),80); }
+    function playCollapse() { playTone(330,'sine',0.12,0.1); }
+    function playClick()   { playTone(880,'square',0.06,0.08); }
+    function playDrop(correct) { playTone(correct?880:220, correct?'sine':'sawtooth', 0.2, 0.15); }
+    function playSuccess() {
+        [523,659,784,1047].forEach((f,i) => setTimeout(()=>playTone(f,'triangle',0.3,0.2), i*120));
+    }
+
+    // ─── PARTICLE CANVAS ───
+    function initParticles() {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        const particles = [];
+        const COLORS = ['#F3C522','#E53B82','#83D5A1','#BA2433','#1F4C59'];
+        class Particle {
+            constructor(x,y,fromClick) {
+                this.x = x || Math.random()*canvas.width;
+                this.y = y || Math.random()*canvas.height;
+                this.r = fromClick ? (Math.random()*6+2) : (Math.random()*2+0.5);
+                this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+                this.vx = (Math.random()-0.5)*(fromClick?5:0.3);
+                this.vy = (Math.random()-0.5)*(fromClick?5:0.3) - (fromClick?1:0);
+                this.alpha = fromClick ? 1 : (Math.random()*0.4+0.1);
+                this.decay = fromClick ? 0.018 : 0.002;
+                this.shape = Math.random() > 0.5 ? 'circle' : 'rect';
+            }
+            update() { this.x+=this.vx; this.y+=this.vy; this.alpha-=this.decay; }
+            draw() {
+                ctx.globalAlpha = Math.max(0,this.alpha);
+                ctx.fillStyle = this.color;
+                if (this.shape==='circle') {
+                    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
+                } else {
+                    ctx.fillRect(this.x-this.r,this.y-this.r,this.r*2,this.r*2);
+                }
+            }
+        }
+        // ambient particles
+        for (let i=0;i<60;i++) particles.push(new Particle());
+        document.addEventListener('click', e => {
+            for (let i=0;i<18;i++) particles.push(new Particle(e.clientX,e.clientY,true));
+        });
+        function loop() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            for (let i=particles.length-1;i>=0;i--) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].alpha<=0) {
+                    if (!particles[i].fromClick) particles[i] = new Particle();
+                    else particles.splice(i,1);
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    // ─── STAGE BANDS ───
+    const container  = document.getElementById('collage-container');
+    const bands      = document.querySelectorAll('.stage-band');
+    const mainBanner = document.getElementById('main-banner');
+    const quizTrigger= document.getElementById('open-quiz');
+    const quizOverlay= document.getElementById('quiz-overlay');
+    const quizClose  = document.getElementById('close-quiz');
+    let exploreCount = 0;
+    const segments   = [document.getElementById('seg1'),document.getElementById('seg2'),document.getElementById('seg3'),document.getElementById('seg4')];
+
+    bands.forEach((band, idx) => {
+        band.addEventListener('click', e => {
+            if (e.target.classList.contains('close-btn')) return;
+            if (band.classList.contains('active')) return;
+            playExpand();
+            bands.forEach(b => { b.classList.remove('active'); b.classList.add('inactive'); });
+            band.classList.remove('inactive'); band.classList.add('active');
+            container.classList.add('has-active');
+            mainBanner.classList.add('hidden');
+            quizTrigger.style.opacity = '0';
+            quizTrigger.style.pointerEvents = 'none';
+            // update progress
+            segments.forEach((s,i) => s.classList.toggle('active', i===idx));
+            // count explored
+            if (band.dataset.explored !== 'true') {
+                band.dataset.explored = 'true';
+                exploreCount++;
+                document.getElementById('explore-count').textContent = exploreCount;
+            }
+            tooltip.classList.remove('show');
+        });
+    });
+
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            playCollapse();
+            bands.forEach(b => b.classList.remove('active','inactive'));
+            container.classList.remove('has-active');
+            mainBanner.classList.remove('hidden');
+            quizTrigger.style.opacity = '1';
+            quizTrigger.style.pointerEvents = 'auto';
+            segments.forEach(s => s.classList.remove('active'));
+        });
+    });
+
+    // ─── FUN FACT PILLS ───
+    document.addEventListener('click', e => {
+        if (!e.target.classList.contains('fun-fact-pill')) return;
+        playClick();
+        const key = e.target.dataset.fact;
+        // close all others in same stage
+        const parent = e.target.closest('.stage-band');
+        parent.querySelectorAll('.fun-fact-reveal').forEach(r => {
+            if (r.id !== 'fact-'+key) r.classList.remove('open');
+        });
+        const reveal = document.getElementById('fact-'+key);
+        if (reveal) reveal.classList.toggle('open');
+    });
+
+    // ─── QUIZ ───
+    quizTrigger.addEventListener('click', () => { playClick(); quizOverlay.classList.add('active'); });
+    quizClose.addEventListener('click', () => { playCollapse(); quizOverlay.classList.remove('active'); resetQuiz(); });
+
+    document.getElementById('quiz-reset').addEventListener('click', () => { playClick(); resetQuiz(); });
+
+    function resetQuiz() {
+        const bank = document.getElementById('draggable-items');
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.classList.remove('correct','wrong');
+            bank.appendChild(item);
+            item.style.transform = '';
+            item.style.boxShadow = '';
+            item.draggable = true;
+        });
+        document.querySelectorAll('.drop-zone').forEach(z => {
+            z.textContent = `Drop Stage ${z.dataset.order}`;
+            z.style.borderStyle = 'dashed';
+        });
+        document.getElementById('quiz-result').style.display = 'none';
+        document.getElementById('quiz-reset').style.display = 'none';
+    }
+
+    let draggingItem = null;
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('dragstart', () => { draggingItem = item; item.classList.add('dragging'); });
+        item.addEventListener('dragend',   () => item.classList.remove('dragging'));
+    });
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('hovered'); });
+        zone.addEventListener('dragleave', ()  => zone.classList.remove('hovered'));
+        zone.addEventListener('drop', e => {
+            e.preventDefault(); zone.classList.remove('hovered');
+            if (!draggingItem) return;
+            const correct = draggingItem.dataset.id === zone.dataset.order;
+            zone.innerHTML = ''; zone.appendChild(draggingItem);
+            zone.style.borderStyle = 'solid';
+            draggingItem.style.transform = 'rotate(0deg)';
+            draggingItem.style.boxShadow = 'none';
+            draggingItem.classList.toggle('correct', correct);
+            draggingItem.classList.toggle('wrong',  !correct);
+            draggingItem.draggable = false;
+            playDrop(correct);
+            checkQuiz();
+            draggingItem = null;
+        });
+    });
+
+    function checkQuiz() {
+        let filled = 0, correct = 0;
+        document.querySelectorAll('.drop-zone').forEach(z => {
+            const item = z.querySelector('.drag-item');
+            if (item) { filled++; if (item.dataset.id===z.dataset.order) correct++; }
+        });
+        if (filled === 4) {
+            const resultEl = document.getElementById('quiz-result');
+            const resetBtn = document.getElementById('quiz-reset');
+            if (correct === 4) {
+                playSuccess();
+                resultEl.textContent = '✦ SEQUENCE VERIFIED — METAMORPHOSIS COMPLETE ✦';
+                resultEl.style.color = '#83D5A1';
+            } else {
+                resultEl.textContent = `${correct}/4 CORRECT — TRY AGAIN`;
+                resultEl.style.color = '#E53B82';
+            }
+            resultEl.style.display = 'block';
+            resetBtn.style.display = 'inline-block';
+        }
+    }
+    </script>
+
+</body></html>

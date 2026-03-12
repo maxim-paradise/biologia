@@ -1,0 +1,516 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Microbiome Isometry</title>
+    <style vid="5">
+        
+
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            
+            --bg-top: #8bfeba;
+            --bg-bottom: #f8f698;
+            --base-dark: #2a0a5e;
+            --base-dark-alpha: rgba(42, 10, 94, 0.15);
+            --accent-green: #00d287;
+            --accent-green-dark: #00a86b;
+            --accent-pink: #ffa4f0;
+            --accent-pink-dark: #e87bcf;
+            --ui-white: #ffffff;
+            --ui-offwhite: #f3f0f7;
+            --shadow-color: rgba(42, 10, 94, 0.9);
+            
+            
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
+            
+            
+            --grid-size: 40px;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: var(--font-ui);
+            color: var(--base-dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-mark {
+            width: 24px;
+            height: 24px;
+            background: var(--base-dark);
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+        }
+
+        .logo-mark::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .system-status {
+            display: flex;
+            gap: 16px;
+        }
+
+        .status-badge {
+            background: var(--ui-white);
+            border: 2px solid var(--base-dark);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 3px 3px 0px var(--base-dark);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-pink);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green { background: var(--accent-green); }
+
+        
+        .stage-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+        .isometric-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 1200px;
+            max-height: 900px;
+            filter: drop-shadow(0px 20px 40px rgba(42, 10, 94, 0.1));
+        }
+
+        
+        .floating-ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+        }
+
+        
+        .iso-card {
+            position: absolute;
+            background: var(--ui-white);
+            border: 2px solid var(--base-dark);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 6px 6px 0px var(--base-dark);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: float-card 6s ease-in-out infinite;
+            width: max-content;
+        }
+
+        .iso-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .card-icon-box {
+            width: 40px;
+            height: 40px;
+            background: var(--base-dark);
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-data {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            min-width: 120px;
+        }
+
+        
+        .data-line {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--ui-offwhite);
+            width: 100%;
+        }
+
+        .data-line.pink { background: var(--accent-pink); width: 80%; }
+        .data-line.green { background: var(--accent-green); width: 60%; }
+        .data-line.dark { background: var(--base-dark); width: 40%; }
+
+        .card-label {
+            font-family: var(--font-display);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--base-dark);
+            margin-bottom: 2px;
+        }
+
+        
+        .card-1 { top: 25%; left: 55%; animation-delay: 0s; }
+        .card-2 { top: 40%; left: 65%; animation-delay: -2s; }
+        .card-3 { top: 60%; left: 15%; animation-delay: -4s; }
+
+        
+        .bottom-panel {
+            padding: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--base-dark);
+            box-shadow: 4px 4px 0px var(--base-dark);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid var(--base-dark);
+        }
+
+        .swatch.macrophage { background: var(--ui-white); }
+        .swatch.virus { background: var(--accent-pink); }
+        .swatch.bacteria { background: var(--accent-green); }
+
+        .metrics {
+            text-align: right;
+            font-family: var(--font-display);
+        }
+
+        .metric-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 0px var(--ui-white);
+        }
+
+        .metric-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        
+        .anim-float-fast { animation: float-card 3s ease-in-out infinite; }
+        .anim-float-slow { animation: float-card 8s ease-in-out infinite; }
+        .anim-pulse-path { animation: stroke-pulse 2s infinite; }
+
+        @keyframes stroke-pulse {
+            0% { stroke-opacity: 0.3; }
+            50% { stroke-opacity: 1; }
+            100% { stroke-opacity: 0.3; }
+        }
+
+        
+        @media (max-width: 768px) {
+            .top-nav { flex-direction: column; gap: 16px; padding: 16px; }
+            .bottom-panel { flex-direction: column; gap: 24px; align-items: stretch; padding: 16px; }
+            .legend { flex-wrap: wrap; justify-content: center; }
+            .metrics { text-align: center; }
+            .card-1 { top: 15%; left: 50%; transform: translateX(-50%); }
+            .card-2 { top: 75%; left: 50%; transform: translateX(-50%); }
+            .card-3 { display: none; }
+        }
+    </style>
+</head>
+<body vid="6">
+
+    <header class="top-nav" vid="7">
+        <div class="logo" vid="8">
+            <div class="logo-mark" vid="9"></div>
+            MICRO-CITY MONITOR
+        </div>
+        <div class="system-status" vid="10">
+            <div class="status-badge" vid="11">
+                <div class="status-dot green" vid="12"></div>
+                DEFENSE: ACTIVE
+            </div>
+            <div class="status-badge" vid="13">
+                <div class="status-dot" vid="14"></div>
+                THREAT: MODERATE
+            </div>
+        </div>
+    </header>
+
+    <main class="stage-container" vid="15">
+        
+        
+        <svg class="isometric-svg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" vid="16">
+            <defs vid="17">
+                
+                <filter id="iso-shadow" x="-20%" y="-20%" width="140%" height="140%" vid="18">
+                    <fedropshadow dx="15" dy="15" stdDeviation="0" flood-color="#2a0a5e" flood-opacity="1" vid="19"></fedropshadow>
+                </filter>
+            </defs>
+
+            <g transform="translate(500, 250)" vid="20">
+                
+                
+                <polygon points="0,420 -350,220 0,20 350,220" fill="#2a0a5e" opacity="0.1" transform="translate(0, 20)" vid="21"></polygon>
+                
+                
+                <polygon points="0,400 -400,200 0,0 400,200" fill="#2a0a5e" stroke="#1c073d" stroke-width="4" vid="22"></polygon>
+                
+                
+                <path d="M -300,150 L 100,350 M -200,100 L 200,300 M -100,50 L 300,250 M -100,250 L 300,50 M -200,200 L 200,0 M -300,250 L 100,50" stroke="rgba(255,255,255,0.05)" stroke-width="2" vid="23"></path>
+
+                
+                <g transform="translate(-150, 150)" vid="24">
+                    
+                    <polygon points="0,60 -60,30 0,0 60,30" fill="#14042d" vid="25"></polygon>
+                    
+                    <path d="M 0,50 L -50,25 L -50,-40 L 0,-15 Z" fill="#00a86b" vid="26"></path> 
+                    <path d="M 0,50 L 50,25 L 50,-40 L 0,-15 Z" fill="#007a4d" vid="27"></path> 
+                    <polygon points="0,-15 -50,-40 0,-65 50,-40" fill="#00d287" vid="28"></polygon> 
+                    
+                    
+                    <g transform="translate(0, -65)" vid="29">
+                        <path d="M 0,20 L -30,5 L -30,-30 L 0,-15 Z" fill="#00a86b" vid="30"></path>
+                        <path d="M 0,20 L 30,5 L 30,-30 L 0,-15 Z" fill="#007a4d" vid="31"></path>
+                        <polygon points="0,-15 -30,-30 0,-45 30,-30" fill="#36f5b0" vid="32"></polygon>
+                    </g>
+                </g>
+                
+                <g transform="translate(-250, 200)" vid="33">
+                    
+                    <polygon points="0,40 -40,20 0,0 40,20" fill="#14042d" vid="34"></polygon>
+                    <path d="M 0,30 L -30,15 L -30,-20 L 0,-5 Z" fill="#00a86b" vid="35"></path>
+                    <path d="M 0,30 L 30,15 L 30,-20 L 0,-5 Z" fill="#007a4d" vid="36"></path>
+                    <polygon points="0,-5 -30,-20 0,-35 30,-20" fill="#00d287" vid="37"></polygon>
+                </g>
+
+                
+                <g transform="translate(50, 220)" vid="38">
+                    
+                    <polygon points="0,100 -120,40 20,-30 140,30" fill="#14042d" vid="39"></polygon>
+                    
+                    
+                    <path d="M 0,80 L -100,30 L -100,-40 L 0,10 Z" fill="#e2e8f0" vid="40"></path>
+                    <path d="M 0,80 L 120,20 L 120,-50 L 0,10 Z" fill="#cbd5e1" vid="41"></path>
+                    <polygon points="0,10 -100,-40 20,-100 120,-50" fill="#ffffff" vid="42"></polygon>
+                    
+                    
+                    <g transform="translate(10, -50)" vid="43">
+                        <path d="M 0,40 L -60,10 L -60,-40 L 0,-10 Z" fill="#e2e8f0" vid="44"></path>
+                        <path d="M 0,40 L 70,5 L 70,-45 L 0,-10 Z" fill="#cbd5e1" vid="45"></path>
+                        <polygon points="0,-10 -60,-40 10,-75 70,-45" fill="#f8fafc" vid="46"></polygon>
+                        
+                        
+                        <polygon points="5,-30 -20,-42 5,-55 30,-42" fill="#00d287" opacity="0.8" vid="47"></polygon>
+                    </g>
+                </g>
+
+                
+                
+                
+                <g class="anim-float-fast" transform="translate(200, 50)" vid="48">
+                    
+                    <polygon points="0,220 -40,200 0,180 40,200" fill="#14042d" opacity="0.6" vid="49"></polygon>
+                    
+                    
+                    <g transform="translate(0, 0)" vid="50">
+                        <path d="M 0,40 L -30,20 L -30,-20 L 0,0 Z" fill="#e87bcf" vid="51"></path>
+                        <path d="M 0,40 L 30,20 L 30,-20 L 0,0 Z" fill="#c754ab" vid="52"></path>
+                        <polygon points="0,0 -30,-20 0,-40 30,-20" fill="#ffa4f0" vid="53"></polygon>
+                        
+                        
+                        <rect x="-15" y="-35" width="4" height="15" fill="#2a0a5e" transform="rotate(-30)" vid="54"></rect>
+                        <rect x="15" y="-15" width="4" height="15" fill="#2a0a5e" transform="rotate(30)" vid="55"></rect>
+                    </g>
+                </g>
+
+                
+                <g class="anim-float-slow" transform="translate(80, -50)" vid="56">
+                    <polygon points="0,320 -20,310 0,300 20,310" fill="#14042d" opacity="0.4" vid="57"></polygon>
+                    <g transform="translate(0, 0)" vid="58">
+                        <path d="M 0,20 L -15,10 L -15,-10 L 0,0 Z" fill="#e87bcf" vid="59"></path>
+                        <path d="M 0,20 L 15,10 L 15,-10 L 0,0 Z" fill="#c754ab" vid="60"></path>
+                        <polygon points="0,0 -15,-10 0,-20 15,-10" fill="#ffa4f0" vid="61"></polygon>
+                    </g>
+                </g>
+
+                
+                <g transform="translate(-50, 0)" vid="62">
+                     
+                     <path d="M -50,150 Q 0,200 100,120 Q 150,80 200,100" fill="none" stroke="#14042d" stroke-width="20" stroke-linecap="round" opacity="0.4" vid="63"></path>
+                     
+                     
+                     <path d="M -50,50 Q 0,100 100,20 Q 150,-20 200,0 L 200,20 Q 150,0 100,40 Q 0,120 -50,70 Z" fill="#f3f0f7" stroke="#2a0a5e" stroke-width="3" stroke-linejoin="round" vid="64"></path>
+                     
+                     
+                     <path d="M -30,68 L -20,80 M 10,75 L 20,88 M 50,58 L 60,72 M 90,38 L 100,52 M 130,18 L 140,30 M 170,8 L 180,20" stroke="#00d287" stroke-width="4" stroke-linecap="round" vid="65"></path>
+                     <path d="M -15,75 L -5,88 M 30,65 L 40,78 M 70,48 L 80,62 M 110,28 L 120,40 M 150,12 L 160,25" stroke="#ffa4f0" stroke-width="4" stroke-linecap="round" vid="66"></path>
+                </g>
+
+                
+                <path d="M -150,85 L 50,170" fill="none" stroke="#00d287" stroke-width="2" stroke-dasharray="4,4" class="anim-pulse-path" vid="67"></path>
+                <path d="M 200,50 L 60,120" fill="none" stroke="#ffa4f0" stroke-width="2" stroke-dasharray="4,4" class="anim-pulse-path" vid="68"></path>
+
+            </g>
+        </svg>
+
+        
+        <div class="floating-ui-layer" vid="69">
+            
+            
+            <div class="iso-card card-1" vid="70">
+                <div class="card-icon-box" vid="71">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-pink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vid="72">
+                        <path d="M12 2v20M17 5l-10 14M22 12H2M19 17L5 7" vid="73"></path>
+                    </svg>
+                </div>
+                <div class="card-data" vid="74">
+                    <div class="card-label" vid="75">Threat.RNA</div>
+                    <div class="data-line pink" vid="76"></div>
+                    <div class="data-line dark" vid="77"></div>
+                </div>
+            </div>
+
+            
+            <div class="iso-card card-2" vid="78">
+                <div class="card-icon-box" vid="79">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ui-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vid="80">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" vid="81"></path>
+                    </svg>
+                </div>
+                <div class="card-data" vid="82">
+                    <div class="card-label" vid="83">Phagocytosis</div>
+                    <div class="data-line green" vid="84"></div>
+                    <div class="data-line pink" style="width:40%" vid="85"></div>
+                </div>
+            </div>
+
+            
+            <div class="iso-card card-3" vid="86">
+                <div class="card-icon-box" vid="87">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vid="88">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" vid="89"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" vid="90"></path>
+                    </svg>
+                </div>
+                <div class="card-data" vid="91">
+                    <div class="card-label" vid="92">Colony.Gen</div>
+                    <div class="data-line dark" style="width:70%" vid="93"></div>
+                    <div class="data-line green" vid="94"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bottom-panel" vid="95">
+        <div class="legend" vid="96">
+            <div class="legend-item" vid="97">
+                <div class="swatch macrophage" vid="98"></div>
+                Macrophage
+            </div>
+            <div class="legend-item" vid="99">
+                <div class="swatch bacteria" vid="100"></div>
+                Flora (Benign)
+            </div>
+            <div class="legend-item" vid="101">
+                <div class="swatch virus" vid="102"></div>
+                Pathogen
+            </div>
+        </div>
+
+        <div class="metrics" vid="103">
+            <div class="metric-label" vid="104">Cellular Integrity</div>
+            <div class="metric-value" vid="105">94.2%</div>
+        </div>
+    </footer>
+
+
+</body></html>
