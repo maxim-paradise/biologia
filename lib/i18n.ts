@@ -506,6 +506,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    lng: "uk",
     fallbackLng: "uk",
     supportedLngs: ["en", "uk"],
     nonExplicitSupportedLngs: true,

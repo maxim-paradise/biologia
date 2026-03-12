@@ -387,16 +387,8 @@ const Landing: React.FC = () => {
             {featuredResources.map((res) => (
               <Link key={res.id} href={res.href} className="gallery-card">
                 <div className="card-ink">{res.indexLabel}</div>
-                <h3>
-                  {i18n.language === "uk"
-                    ? res.titleTextUk ?? res.titleText ?? t(res.titleKey)
-                    : res.titleText ?? t(res.titleKey)}
-                </h3>
-                <p>
-                  {i18n.language === "uk"
-                    ? res.descTextUk ?? res.descText ?? t(res.descKey)
-                    : res.descText ?? t(res.descKey)}
-                </p>
+                <h3>{t(res.titleKey)}</h3>
+                <p>{t(res.descKey)}</p>
                 <div className="card-arrow">{"->"}</div>
               </Link>
             ))}
