@@ -120,8 +120,6 @@ export default function MetamorphosisPage() {
     return (Object.values(explored).filter(Boolean).length || 0) as number;
   }, [explored]);
 
-  const [openFactKey, setOpenFactKey] = useState<string | null>(null);
-
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizPlacements, setQuizPlacements] = useState<
     Partial<Record<StageId, QuizItemId>>
@@ -214,7 +212,7 @@ export default function MetamorphosisPage() {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    const selector = "article, button, .fun-fact-pill, .art-piece";
+    const selector = "article, button, .art-piece";
     const els = Array.from(document.querySelectorAll(selector));
 
     const onEnter = () => cursor.classList.add("hover");
@@ -231,7 +229,7 @@ export default function MetamorphosisPage() {
         el.removeEventListener("mouseleave", onLeave);
       });
     };
-  }, [splashVisible, quizOpen, activeStage, openFactKey]);
+  }, [splashVisible, quizOpen, activeStage]);
 
   useEffect(() => {
     if (splashVisible) return;
@@ -370,14 +368,6 @@ export default function MetamorphosisPage() {
     setActiveStage(null);
   }, [playCollapse]);
 
-  const toggleFact = useCallback(
-    (key: string) => {
-      playClick();
-      setOpenFactKey((prev) => (prev === key ? null : key));
-    },
-    [playClick],
-  );
-
   const quizItems = useMemo(
     () =>
       [
@@ -449,7 +439,6 @@ export default function MetamorphosisPage() {
   const openQuiz = useCallback(() => {
     playClick();
     setActiveStage(null);
-    setOpenFactKey(null);
     setQuizOpen(true);
   }, [playClick]);
 
@@ -484,8 +473,10 @@ export default function MetamorphosisPage() {
           background-color: var(--black);
           color: var(--black);
           font-family: var(--font-mono);
-          overflow: hidden;
-          height: 100vh;
+          overflow-x: hidden;
+          overflow-y: auto;
+          min-height: 100vh;
+          height: auto;
           width: 100vw;
           position: relative;
           user-select: none;
@@ -500,7 +491,8 @@ export default function MetamorphosisPage() {
         #collage-container {
           display: flex;
           flex-direction: column;
-          height: 100vh;
+          min-height: 100vh;
+          height: auto;
           width: 100vw;
           position: relative;
           z-index: 1;
@@ -676,14 +668,18 @@ export default function MetamorphosisPage() {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 4vw;
+          overflow: visible;
           pointer-events: none;
           transition: opacity 0.5s ease 0.3s;
           align-items: center;
         }
 
         .stage-band.active {
-          flex: 8;
+          flex: none;
+          min-height: 100vh;
+          height: auto;
           cursor: default;
+          overflow: visible;
         }
 
         .stage-band.active .default-content {
@@ -694,6 +690,11 @@ export default function MetamorphosisPage() {
         .stage-band.active .expanded-content {
           opacity: 1;
           pointer-events: auto;
+          position: relative;
+          inset: auto;
+          height: auto;
+          max-height: none;
+          align-items: start;
         }
 
         .stage-band.inactive {
@@ -1168,45 +1169,16 @@ export default function MetamorphosisPage() {
           opacity: 0.4;
         }
 
-        .fun-fact-pill {
-          display: inline-block;
-          background: var(--black);
-          color: var(--white);
-          font-family: var(--font-mono);
-          font-size: 0.65rem;
-          padding: 4px 10px;
-          margin: 4px 4px 0 0;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-
-        .fun-fact-pill:hover {
-          background: var(--yellow);
-          color: var(--black);
-        }
-
         .fun-fact-reveal {
           margin-top: 10px;
           font-family: var(--font-mono);
-          font-size: 0.78rem;
+          font-size: 0.8rem;
           line-height: 1.5;
           background: rgba(255, 255, 255, 0.9);
           border-left: 4px solid;
-          padding: 8px 12px;
-          min-height: 0;
-          max-height: 0;
-          overflow: hidden;
-          transition:
-            max-height 0.4s ease,
-            padding 0.3s;
-        }
-
-        .fun-fact-reveal.open {
-          max-height: 520px;
-          overflow: auto;
+          padding: 10px 12px;
+          max-height: none;
+          overflow: visible;
         }
 
         @keyframes pulse-ring {
@@ -1601,24 +1573,10 @@ export default function MetamorphosisPage() {
                   <strong>{t("meta_observation")}:</strong> {t("meta_egg_obs")}
                 </p>
               </div>
-              <div style={{ marginTop: 12 }}>
-                {(["egg1", "egg2", "egg3"] as const).map((k) => (
-                  <div
-                    key={k}
-                    className="fun-fact-pill"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFact(k);
-                    }}
-                  >
-                    {t(funFacts[k].labelKey)}
-                  </div>
-                ))}
-              </div>
               {(["egg1", "egg2", "egg3"] as const).map((k) => (
                 <div
                   key={k}
-                  className={`fun-fact-reveal ${openFactKey === k ? "open" : ""}`}
+                  className="fun-fact-reveal"
                   style={{ borderColor: `var(--${k})` }}
                 >
                   {t(funFacts[k].textKey)}
@@ -1729,24 +1687,10 @@ export default function MetamorphosisPage() {
                   {t("meta_larva_obs")}
                 </p>
               </div>
-              <div style={{ marginTop: 12 }}>
-                {(["larva1", "larva2", "larva3"] as const).map((k) => (
-                  <div
-                    key={k}
-                    className="fun-fact-pill"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFact(k);
-                    }}
-                  >
-                    {t(funFacts[k].labelKey)}
-                  </div>
-                ))}
-              </div>
               {(["larva1", "larva2", "larva3"] as const).map((k) => (
                 <div
                   key={k}
-                  className={`fun-fact-reveal ${openFactKey === k ? "open" : ""}`}
+                  className="fun-fact-reveal"
                   style={{ borderColor: `var(--${k})` }}
                 >
                   {t(funFacts[k].textKey)}
@@ -1829,24 +1773,10 @@ export default function MetamorphosisPage() {
                   <strong>{t("meta_observation")}:</strong> {t("meta_pupa_obs")}
                 </p>
               </div>
-              <div style={{ marginTop: 12 }}>
-                {(["pupa1", "pupa2", "pupa3"] as const).map((k) => (
-                  <div
-                    key={k}
-                    className="fun-fact-pill"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFact(k);
-                    }}
-                  >
-                    {t(funFacts[k].labelKey)}
-                  </div>
-                ))}
-              </div>
               {(["pupa1", "pupa2", "pupa3"] as const).map((k) => (
                 <div
                   key={k}
-                  className={`fun-fact-reveal ${openFactKey === k ? "open" : ""}`}
+                  className="fun-fact-reveal"
                   style={{ borderColor: `var(--${k})` }}
                 >
                   {t(funFacts[k].textKey)}
@@ -1949,24 +1879,10 @@ export default function MetamorphosisPage() {
                   {t("meta_adult_obs")}
                 </p>
               </div>
-              <div style={{ marginTop: 12 }}>
-                {(["adult1", "adult2", "adult3"] as const).map((k) => (
-                  <div
-                    key={k}
-                    className="fun-fact-pill"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFact(k);
-                    }}
-                  >
-                    {t(funFacts[k].labelKey)}
-                  </div>
-                ))}
-              </div>
               {(["adult1", "adult2", "adult3"] as const).map((k) => (
                 <div
                   key={k}
-                  className={`fun-fact-reveal ${openFactKey === k ? "open" : ""}`}
+                  className="fun-fact-reveal"
                   style={{ borderColor: funFacts[k].color }}
                 >
                   {t(funFacts[k].textKey)}

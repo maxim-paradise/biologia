@@ -27,9 +27,9 @@ const resources = {
       landing_card_metamorphosis_title: "Metamorphosis",
       landing_card_metamorphosis_desc:
         "Interactive study + mini game: arrange the life-cycle sequence",
-      landing_card_architecture_title: "System Architecture",
+      landing_card_architecture_title: "Bio Lab Atlas",
       landing_card_architecture_desc:
-        "Interactive dashboard concept: cards, canvas visualizations, and UI states",
+        "Visual map of systems, modules, and data flows across the platform",
 
       // Biology Model
       bm_observation_paradigm: "OBSERVATION PARADIGM",
@@ -275,9 +275,9 @@ const resources = {
       landing_card_metamorphosis_title: "Метаморфоза",
       landing_card_metamorphosis_desc:
         "Інтерактивне дослідження + міні-гра: склади послідовність циклу життя",
-      landing_card_architecture_title: "Архітектура Системи",
+      landing_card_architecture_title: "Атлас БіоЛабу",
       landing_card_architecture_desc:
-        "Інтерактивний дашборд-концепт: картки, canvas-візуалізації та UI-стани",
+        "Візуальна мапа систем, модулів і потоків даних платформи",
 
       // Biology Model
       bm_observation_paradigm: "ПАРАДИГМА СПОСТЕРЕЖЕННЯ",

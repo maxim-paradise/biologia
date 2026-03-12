@@ -4,6 +4,10 @@ export type FeaturedResource = {
   titleKey: string;
   descKey: string;
   indexLabel: string;
+  titleText?: string;
+  descText?: string;
+  titleTextUk?: string;
+  descTextUk?: string;
 };
 
 export const featuredResources: FeaturedResource[] = [
@@ -34,5 +38,9 @@ export const featuredResources: FeaturedResource[] = [
     titleKey: "landing_card_architecture_title",
     descKey: "landing_card_architecture_desc",
     indexLabel: "04",
+    titleText: "Bio Lab Atlas",
+    descText: "Visual map of systems, modules, and data flows across the platform",
+    titleTextUk: "Атлас БіоЛабу",
+    descTextUk: "Візуальна мапа систем, модулів і потоків даних платформи",
   },
 ];

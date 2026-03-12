@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { PCDLoader } from "three/examples/jsm/loaders/PCDLoader.js";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import "@/lib/i18n";
@@ -16,6 +15,11 @@ const Landing: React.FC = () => {
   const blurLayerRef = useRef<HTMLDivElement>(null);
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorOutlineRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const shouldPlayFlower = useCallback(() => {
     try {
@@ -33,11 +37,18 @@ const Landing: React.FC = () => {
 
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   // flowerVisible = true → flower shown; false → flower fades out
-  const [flowerVisible, setFlowerVisible] = useState(() => shouldPlayFlower());
+  const [flowerVisible, setFlowerVisible] = useState(false);
   // uiVisible = false → UI/3D hidden; true → visible
-  const [uiVisible, setUiVisible] = useState(() => !shouldPlayFlower());
+  const [uiVisible, setUiVisible] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const playFlower = shouldPlayFlower();
+    setFlowerVisible(playFlower);
+    setUiVisible(!playFlower);
+  }, [mounted, shouldPlayFlower]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -107,59 +118,38 @@ const Landing: React.FC = () => {
     // Orbit target shifted right
     controls.target.set(0.25, 0, 0);
 
-    let fallbackPoints: THREE.Points | null = null;
-    let pointsObject: THREE.Points | null = null;
     let rafId: number;
-
-    const createFallback = () => {
-      const count = 15000;
-      const positions = new Float32Array(count * 3);
-      const colors = new Float32Array(count * 3);
-      const orange = new THREE.Color(0xe67e22);
-      for (let i = 0; i < count; i++) {
-        const i3 = i * 3;
-        const r = 0.4 + Math.random() * 0.3;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        positions[i3] = r * Math.sin(phi) * Math.cos(theta);
-        positions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-        positions[i3 + 2] = r * Math.cos(phi);
-        colors[i3] = orange.r;
-        colors[i3 + 1] = orange.g;
-        colors[i3 + 2] = orange.b;
-      }
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-      fallbackPoints = new THREE.Points(
-        geo,
-        new THREE.PointsMaterial({
-          size: 0.002,
-          vertexColors: true,
-          transparent: true,
-          opacity: 0.65,
-        }),
-      );
-      scene.add(fallbackPoints);
-    };
-
-    new PCDLoader().load(
-      "https://threejs.org/examples/models/pcd/binary/Zaghetto.pcd",
-      (pts) => {
-        pts.geometry.center();
-        pts.geometry.rotateX(Math.PI);
-        pts.material.size = 0.003;
-        pts.material.color.setHex(0xe67e22);
-        pts.material.opacity = 0.75;
-        pts.material.transparent = true;
-        // Offset the model to the right
-        pts.position.x = 0.25;
-        scene.add(pts);
-        pointsObject = pts;
-      },
-      undefined,
-      () => createFallback(),
-    );
+    const count = isMobile ? 2400 : 4200;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const base = new THREE.Color(0xe67e22);
+    const accent = new THREE.Color(0xffc07a);
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      const r = 0.25 + Math.random() * 0.35;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      positions[i3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i3 + 2] = r * Math.cos(phi);
+      const mix = Math.random() * 0.6 + 0.2;
+      colors[i3] = THREE.MathUtils.lerp(base.r, accent.r, mix);
+      colors[i3 + 1] = THREE.MathUtils.lerp(base.g, accent.g, mix);
+      colors[i3 + 2] = THREE.MathUtils.lerp(base.b, accent.b, mix);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    const mat = new THREE.PointsMaterial({
+      size: 0.0028,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.72,
+      sizeAttenuation: true,
+    });
+    const points = new THREE.Points(geo, mat);
+    points.position.x = 0.25;
+    scene.add(points);
 
     scene.add(new THREE.AmbientLight(0xfff5e1, 1.0));
     const dLight = new THREE.DirectionalLight(0xff7f50, 1.5);
@@ -176,8 +166,8 @@ const Landing: React.FC = () => {
     const animate = () => {
       rafId = requestAnimationFrame(animate);
       controls.update();
-      if (fallbackPoints) fallbackPoints.rotation.y += 0.0005;
-      if (pointsObject) pointsObject.rotation.y += 0.0005;
+      points.rotation.y += 0.0006;
+      points.rotation.x += 0.0002;
       renderer.render(scene, camera);
     };
     animate();
@@ -189,6 +179,8 @@ const Landing: React.FC = () => {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      geo.dispose();
+      mat.dispose();
     };
   }, [uiVisible]);
 
@@ -271,6 +263,10 @@ const Landing: React.FC = () => {
     }
     i18n.changeLanguage(lng);
   };
+
+  if (!mounted) {
+    return <div className="landing-body" suppressHydrationWarning />;
+  }
 
   return (
     <div className="landing-body">
@@ -391,9 +387,17 @@ const Landing: React.FC = () => {
             {featuredResources.map((res) => (
               <Link key={res.id} href={res.href} className="gallery-card">
                 <div className="card-ink">{res.indexLabel}</div>
-                <h3>{t(res.titleKey)}</h3>
-                <p>{t(res.descKey)}</p>
-                <div className="card-arrow">→</div>
+                <h3>
+                  {i18n.language === "uk"
+                    ? res.titleTextUk ?? res.titleText ?? t(res.titleKey)
+                    : res.titleText ?? t(res.titleKey)}
+                </h3>
+                <p>
+                  {i18n.language === "uk"
+                    ? res.descTextUk ?? res.descText ?? t(res.descKey)
+                    : res.descText ?? t(res.descKey)}
+                </p>
+                <div className="card-arrow">{"->"}</div>
               </Link>
             ))}
           </div>
